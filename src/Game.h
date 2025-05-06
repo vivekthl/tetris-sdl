@@ -22,9 +22,37 @@ namespace Tetris
         Game();
         void start();        
 
+        enum class State
+        {
+            MENU = 0,
+            GAME = 1,
+            GAME_OVER = 2
+        };
+
+
+        template<State MyState>
+        struct StateTag
+        {
+
+        };
+                
+        
     private:
+
+
+
+        
         void init();
         void run();
+
+
+//        template<State MyState>
+//        void runImpl(const StateTag<MyState>&){}
+        
+        void runImpl(const StateTag<State::MENU>&);
+        void runImpl(const StateTag<State::GAME>&);
+        void runImpl(const StateTag<State::GAME_OVER>&);        
+        
         void exit();
         Tetromino generateRandomTertomino() const;
         void addTetromino();
@@ -39,6 +67,7 @@ namespace Tetris
         Matrix                                _matrix;
         unsigned                              _score;
         Music                                 _music;
+        State                                 _state;
     };
 
 }

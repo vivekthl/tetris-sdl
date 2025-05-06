@@ -11,7 +11,8 @@ namespace Tetris
          _tetromino(Tetromino::Shape::I,Color(0,0,0)),
          _matrix(Matrix()),
          _score(0),
-         _music()
+         _music(),
+         _state(State::GAME)
     {}
 
     void Game::start()
@@ -43,7 +44,13 @@ namespace Tetris
         _music.init();
     }
 
-    void Game::run()
+
+    void Game::runImpl(const StateTag<State::MENU>&)
+    {
+        //todo
+    }
+
+    void Game::runImpl(const StateTag<State::GAME>&)
     {
         //Game loop starts here
         SDL_Event event;
@@ -126,6 +133,17 @@ namespace Tetris
                 }
             }
         }
+    }
+
+    void Game::runImpl(const StateTag<State::GAME_OVER>&)
+    {
+        //todo
+    }
+    
+
+    void Game::run()
+    {
+        runImpl(StateTag<State::GAME>());
     }
 
     void Game::exit()
