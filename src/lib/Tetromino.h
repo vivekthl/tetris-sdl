@@ -2,6 +2,8 @@
 #define TETRIS_TETROMINO_H
 
 #include <array>
+#include <cstddef>
+
 /*
 Tetromino is composed of square blocks. We choose
 particular block as pivot.
