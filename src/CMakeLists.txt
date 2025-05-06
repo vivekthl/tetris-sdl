@@ -1,10 +1,16 @@
-add_subdirectory(lib)
+set(TetrisLib_SRCS 
+Matrix.cpp
+Painter.cpp
+Game.cpp
+Tetromino.cpp
+TetrisPainter.cpp
+Music.cpp
+Main.cpp
+)
 
-set(Tetris_SRCS Main.cpp)
+add_executable(tetris ${TetrisLib_SRCS})
 
-add_executable(tetris ${Tetris_SRCS} )
 target_link_libraries(tetris
-TetrisLib
 ${SDL2_LIBRARY}
 ${SDL2_TTF_LIBRARIES}
 ${SDL2_MIXER_LIBRARY}

@@ -3,7 +3,7 @@ project (Tetris)
 
 SET(CMAKE_CXX_FLAGS "-lSDL2 -g -lSDL2_ttf -lfreetype -lSDL2_mixer  -std=c++0x -pthread")
 
-include_directories (${CMAKE_SOURCE_DIR}/src/lib)
+include_directories (${CMAKE_SOURCE_DIR}/src/)
 
 #include FindSDL2.cmake
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)

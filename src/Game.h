@@ -16,10 +16,10 @@
 
 namespace Tetris
 {
-    class Tetris
+    class Game
     {
     public:
-        Tetris();
+        Game();
         void start();        
 
     private:

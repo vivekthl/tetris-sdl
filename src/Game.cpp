@@ -1,11 +1,11 @@
-#include "Tetris.h"
+#include "Game.h"
 #include "TetrisPainter.h"
 
 #include <iostream>
 
 namespace Tetris
 {
-    Tetris::Tetris()
+    Game::Game()
         :_window(NULL),
          _renderer(NULL),
          _tetromino(Tetromino::Shape::I,Color(0,0,0)),
@@ -14,17 +14,17 @@ namespace Tetris
          _music()
     {}
 
-    void Tetris::start()
+    void Game::start()
     {
         init();
         run();
         exit();
     }
 
-    void Tetris::init()
+    void Game::init()
     {
         _window = SDL_CreateWindow(
-            "Tetris", SDL_WINDOWPOS_UNDEFINED,
+            "Game", SDL_WINDOWPOS_UNDEFINED,
             SDL_WINDOWPOS_UNDEFINED,
             SCREEN_WIDTH,
             SCREEN_HEIGHT,
@@ -43,7 +43,7 @@ namespace Tetris
         _music.init();
     }
 
-    void Tetris::run()
+    void Game::run()
     {
         //Game loop starts here
         SDL_Event event;
@@ -128,7 +128,7 @@ namespace Tetris
         }
     }
 
-    void Tetris::exit()
+    void Game::exit()
     {
         SDL_DestroyWindow(_window);
         _music.exit();
@@ -136,7 +136,7 @@ namespace Tetris
         SDL_Quit();  
     }
 
-    Tetromino Tetris::generateRandomTertomino() const
+    Tetromino Game::generateRandomTertomino() const
     {
         size_t tetrominoShapeIndex = rand() % NO_OF_TETROMINO_SHAPES;
         unsigned red = rand()%255;
@@ -159,14 +159,14 @@ namespace Tetris
                                std::get<2>(colorTable[colorTableIndex])));
     }
     
-    void Tetris::addTetromino()
+    void Game::addTetromino()
     {
         _matrix.addTetromino(_tetromino,_tetrominoPosition);
         TetrisPainter tetrisPainter(_renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
         tetrisPainter.drawMatrix(_matrix);
     }
 
-    void Tetris::moveTetromino(Tetromino::Action action_)
+    void Game::moveTetromino(Tetromino::Action action_)
     {
         //Calculate new position of tetromino based on action
         switch(action_)
