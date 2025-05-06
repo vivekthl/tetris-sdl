@@ -12,7 +12,7 @@ namespace Tetris
          _matrix(Matrix()),
          _score(0),
          _music(),
-         _state(State::GAME)
+         _state(State::MENU)
     {}
 
     void Game::start()
@@ -23,7 +23,7 @@ namespace Tetris
     }
 
     void Game::init()
-    {
+    {        
         _window = SDL_CreateWindow(
             "Game", SDL_WINDOWPOS_UNDEFINED,
             SDL_WINDOWPOS_UNDEFINED,
@@ -34,12 +34,11 @@ namespace Tetris
         _renderer = 
             SDL_CreateRenderer(_window, 0, SDL_RENDERER_ACCELERATED);
  
-        SDL_SetRenderDrawColor(_renderer, 255, 250, 235, 255);
+        SDL_SetRenderDrawColor(_renderer, 255, 250, 235, 255); //draw background
         SDL_RenderClear(_renderer);
 
         std::string buttonText = "New Game";
         TetrisPainter tetrisPainter(_renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-        tetrisPainter.drawPanel(0,_tetromino);
 
         _music.init();
     }
@@ -47,7 +46,38 @@ namespace Tetris
 
     void Game::runImpl(const StateTag<State::MENU>&)
     {
-        //todo
+        SDL_Event event;
+        bool quit = false;
+        while(!quit)
+        {
+            while(SDL_PollEvent(&event) != 0)
+            {
+                switch(event.type)
+                {
+                case SDL_KEYDOWN:
+                    switch(event.key.keysym.sym)
+                    {
+                    case SDL_QUIT:
+                    {
+                        quit = true;
+                        break;
+                    }
+                    case SDLK_SPACE:
+                    {
+                        _state = State::GAME;
+                        runImpl(StateTag<State::GAME>());
+                        break;
+                    }
+                    }
+                    break;
+                }
+
+                if(SDL_QUIT == event.type)
+                {
+                    quit = true;
+                }
+            }
+        }
     }
 
     void Game::runImpl(const StateTag<State::GAME>&)
@@ -143,7 +173,7 @@ namespace Tetris
 
     void Game::run()
     {
-        runImpl(StateTag<State::GAME>());
+        runImpl(StateTag<State::MENU>());
     }
 
     void Game::exit()
