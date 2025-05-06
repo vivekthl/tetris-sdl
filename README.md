@@ -2,7 +2,8 @@
 Classic tetris game in C++ using SDL2.0.
 
 ## Build
-Make sure you have cmake and True Type Font (TTF) and SDL2-mixer installed.  
+1. Make sure you have cmake and True Type Font (TTF) and SDL2-mixer installed.  
+2. Clone repo `tetris-sdl-assets` as `assets` directory into root of this repo. 
 
 ```
 mkdir build
