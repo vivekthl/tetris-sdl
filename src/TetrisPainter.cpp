@@ -150,10 +150,12 @@ namespace Tetris
     }
 
     void TetrisPainter::
-    drawText(const std::string& text_, unsigned fontSize_, 
-             const Cordinate& cordinate_, const Color& color_) const
+    drawText(const std::string& text_,
+             unsigned fontSize_, 
+             const Cordinate& cordinate_,
+             const Color& color_) const
     {
-        TTF_Font* ttfFont = TTF_OpenFont("res/sans.ttf", fontSize_);
+        TTF_Font* ttfFont = TTF_OpenFont("assets/fonts/sans.ttf", fontSize_);
         if(!ttfFont)
         {
             printf("TTF_OpenFont: %s\n", TTF_GetError());
@@ -173,5 +175,20 @@ namespace Tetris
 
         SDL_RenderCopy(_renderer, text, NULL, &text_rect);
         SDL_DestroyTexture(text);
+
+        TTF_CloseFont(ttfFont);
+        SDL_RenderPresent(_renderer);
+    }
+
+
+    TetrisPainter::~TetrisPainter()
+    {
+        TTF_Quit();
+    }
+
+    void TetrisPainter::clearScreen() const
+    {
+        SDL_SetRenderDrawColor(_renderer, 255, 250, 235, 255); //draw background
+        SDL_RenderClear(_renderer);        
     }
 }

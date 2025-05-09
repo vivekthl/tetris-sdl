@@ -43,12 +43,24 @@ namespace Tetris
                        unsigned height_) const {}
 
         void clearMatrix() const;
+
+        void drawText(const std::string& text_,
+                      unsigned fontSize_, 
+                      const Cordinate& cordinate_,
+                      const Color& color_) const;
+
+
+        void clearScreen() const;
+
+            
+
+        ~TetrisPainter();          
+        
+        
     private:
         Cordinate getCordinateFromSquarePosition(unsigned row_, unsigned column_) const;
         Cordinate getCordinateFromRelativeSquarePosition(unsigned row_, unsigned column_) const;
         void drawTetrominoOnPanel(const Cordinate& cordinate_,const Tetromino& tetromino_) const;
-        void drawText(const std::string& text_, unsigned fontSize_, 
-                      const Cordinate& cordinate_, const Color& color_) const;
 
         unsigned                                _screenWidth;
         unsigned                                _screenHeight;

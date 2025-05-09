@@ -36,16 +36,30 @@ namespace Tetris
  
         SDL_SetRenderDrawColor(_renderer, 255, 250, 235, 255); //draw background
         SDL_RenderClear(_renderer);
-
-        std::string buttonText = "New Game";
-        TetrisPainter tetrisPainter(_renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-
+        
+        
         _music.init();
     }
 
 
     void Game::runImpl(const StateTag<State::MENU>&)
     {
+        std::cout  << "MENU STATE" << std::endl;
+
+        TetrisPainter tetrisPainter(_renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+        tetrisPainter.clearScreen();
+
+        tetrisPainter.drawText("Tetris",
+                               30,
+                               Cordinate(SCREEN_WIDTH/2 - 40, 60),
+                               Color(192,163,95));        
+
+        tetrisPainter.drawText("Press space to continue...",
+                               14,
+                               Cordinate(SCREEN_WIDTH/2 - 70, 100),
+                               Color(192,163,95)); 
+        
+        
         SDL_Event event;
         bool quit = false;
         while(!quit)
@@ -82,15 +96,21 @@ namespace Tetris
 
     void Game::runImpl(const StateTag<State::GAME>&)
     {
+        
         //Game loop starts here
         SDL_Event event;
         bool quit = false;
 
         _tetrominoPosition = Position(1,4);
         _tetromino = generateRandomTertomino();
+
+        TetrisPainter tetrisPainter(_renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+        tetrisPainter.clearScreen();
+                
         addTetromino();
         Tetromino nextTetromino = generateRandomTertomino();
-        TetrisPainter tetrisPainter(_renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+           
+        
         tetrisPainter.drawPanel(_score,nextTetromino);
         while(!quit)
         {
