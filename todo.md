@@ -1,4 +1,4 @@
-### Issues
+### Todo
 
 * Need to add better randomize function to randomize the order of Tetrominos.
 * Need to add MainMenu state, GameOver state. ie. add StateMachine.
