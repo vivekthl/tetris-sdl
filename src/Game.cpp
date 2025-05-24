@@ -108,7 +108,7 @@ namespace Tetris
         SDL_Event event;
         bool quit = false;
 
-        Position tetrominoStartPosition(0, SCREEN_WIDTH/SQUARE_SIZE/2);
+        Position tetrominoStartPosition(0, (SCREEN_WIDTH/SQUARE_SIZE/2));
         _tetrominoPosition = tetrominoStartPosition;
         _tetromino = generateRandomTertomino();
 
@@ -122,6 +122,14 @@ namespace Tetris
 //        tetrisPainter.drawPanel(_score,nextTetromino);
         while(!quit)
         {
+
+            if(_tetrominoPosition._row > 3)
+            {
+                _matrix.addTetromino(nextTetromino, tetrominoStartPosition);
+                TetrisPainter tetrisPainter(_renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+                tetrisPainter.drawMatrix(_matrix);
+            }
+            
             if(_matrix.hasTetrominoHitBottom(_tetromino,_tetrominoPosition))
             {
                 _matrix.addTetrominoToHeap(_tetromino,_tetrominoPosition);
@@ -129,7 +137,8 @@ namespace Tetris
                 _score += noOfRowsDeleted;
                 _tetrominoPosition = tetrominoStartPosition;
                 _tetromino = nextTetromino;
-                addTetromino();
+                addTetromino();                
+                
                 nextTetromino = generateRandomTertomino();
 //                tetrisPainter.drawPanel(_score,nextTetromino);
                 _music.playSound(Sound::FORCE_HIT);
@@ -141,6 +150,13 @@ namespace Tetris
 
             if(_matrix.hasTetrominoHitHeap(_tetromino,_tetrominoPosition))
             {
+                if(_tetrominoPosition._row < 3)
+                {
+                    _matrix.clear();
+                    runImpl(StateTag<State::GAME_OVER>());
+                }
+                
+                
                 _matrix.addTetrominoToHeap(_tetromino,_tetrominoPosition);
                 unsigned noOfRowsDeleted = _matrix.deletePackedRows();
                 _score += noOfRowsDeleted;
@@ -154,6 +170,9 @@ namespace Tetris
                 {
                     _music.playSound(Sound::LINE_REMOVAL);
                 }
+
+
+                
             }
 //            std::cout << "SCORE: " << _score << std::endl;
 /*
@@ -195,7 +214,54 @@ namespace Tetris
 
     void Game::runImpl(const StateTag<State::GAME_OVER>&)
     {
-        //todo
+        std::cout  << "GAME OVER STATE" << std::endl;
+
+        TetrisPainter tetrisPainter(_renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+        tetrisPainter.clearScreen();
+
+        tetrisPainter.drawText("GAME OVER",
+                               30,
+                               Cordinate(SCREEN_WIDTH/2 - 40, 60),
+                               Color(192,163,95));        
+
+        tetrisPainter.drawText("Press space to continue...",
+                               14,
+                               Cordinate(SCREEN_WIDTH/2 - 70, 100),
+                               Color(192,163,95)); 
+        
+        
+        SDL_Event event;
+        bool quit = false;
+        while(!quit)
+        {
+            while(SDL_PollEvent(&event) != 0)
+            {
+                switch(event.type)
+                {
+                case SDL_KEYDOWN:
+                    switch(event.key.keysym.sym)
+                    {
+                    case SDL_QUIT:
+                    {
+                        quit = true;
+                        break;
+                    }
+                    case SDLK_SPACE:
+                    {
+                        _state = State::MENU;
+                        runImpl(StateTag<State::MENU>());
+                        break;
+                    }
+                    }
+                    break;
+                }
+
+                if(SDL_QUIT == event.type)
+                {
+                    quit = true;
+                }
+            }
+        }
     }
     
 
