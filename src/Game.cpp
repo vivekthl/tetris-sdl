@@ -2,13 +2,15 @@
 #include "TetrisPainter.h"
 
 #include <iostream>
+#include <random>
 
 namespace Tetris
 {
     Game::Game()
         :_window(NULL),
          _renderer(NULL),
-         _tetromino(Tetromino::Shape::I,Color(0,0,0)),
+         _tetromino(Tetromino::Shape::I,
+                    Color(220,255,220)),
          _matrix(Matrix()),
          _score(0),
          _music(),
@@ -33,8 +35,13 @@ namespace Tetris
 
         _renderer = 
             SDL_CreateRenderer(_window, 0, SDL_RENDERER_ACCELERATED);
- 
-        SDL_SetRenderDrawColor(_renderer, 255, 250, 235, 255); //draw background
+        
+        SDL_SetRenderDrawColor(_renderer,
+                               BG_COLOR_RED,
+                               BG_COLOR_GREEN,
+                               BG_COLOR_BLUE,
+                               255);
+        
         SDL_RenderClear(_renderer);
         
         
@@ -101,7 +108,8 @@ namespace Tetris
         SDL_Event event;
         bool quit = false;
 
-        _tetrominoPosition = Position(1,4);
+        Position tetrominoStartPosition(0, SCREEN_WIDTH/SQUARE_SIZE/2);
+        _tetrominoPosition = tetrominoStartPosition;
         _tetromino = generateRandomTertomino();
 
         TetrisPainter tetrisPainter(_renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -111,7 +119,7 @@ namespace Tetris
         Tetromino nextTetromino = generateRandomTertomino();
            
         
-        tetrisPainter.drawPanel(_score,nextTetromino);
+//        tetrisPainter.drawPanel(_score,nextTetromino);
         while(!quit)
         {
             if(_matrix.hasTetrominoHitBottom(_tetromino,_tetrominoPosition))
@@ -119,11 +127,11 @@ namespace Tetris
                 _matrix.addTetrominoToHeap(_tetromino,_tetrominoPosition);
                 unsigned noOfRowsDeleted = _matrix.deletePackedRows();
                 _score += noOfRowsDeleted;
-                _tetrominoPosition = Position(1,4);
+                _tetrominoPosition = tetrominoStartPosition;
                 _tetromino = nextTetromino;
                 addTetromino();
                 nextTetromino = generateRandomTertomino();
-                tetrisPainter.drawPanel(_score,nextTetromino);
+//                tetrisPainter.drawPanel(_score,nextTetromino);
                 _music.playSound(Sound::FORCE_HIT);
                 if(noOfRowsDeleted > 0)
                 {
@@ -136,11 +144,11 @@ namespace Tetris
                 _matrix.addTetrominoToHeap(_tetromino,_tetrominoPosition);
                 unsigned noOfRowsDeleted = _matrix.deletePackedRows();
                 _score += noOfRowsDeleted;
-                _tetrominoPosition = Position(1,4);
+                _tetrominoPosition = tetrominoStartPosition;
                 _tetromino = nextTetromino;
                 addTetromino();
                 nextTetromino = generateRandomTertomino();
-                tetrisPainter.drawPanel(_score,nextTetromino);
+//                tetrisPainter.drawPanel(_score,nextTetromino);
                 _music.playSound(Sound::FORCE_HIT);
                 if(noOfRowsDeleted > 0)
                 {
@@ -207,20 +215,21 @@ namespace Tetris
     Tetromino Game::generateRandomTertomino() const
     {
         size_t tetrominoShapeIndex = rand() % NO_OF_TETROMINO_SHAPES;
-        unsigned red = rand()%255;
-        unsigned green = rand()%255;
-        unsigned blue = rand()%255;
 
-        std::array<std::tuple<unsigned, unsigned, unsigned>, 4> colorTable =
+        std::array<std::tuple<unsigned, unsigned, unsigned>, 3> colorTable =
         {
-            std::make_tuple(255,105,113),
-            std::make_tuple(108,203,155),
-            std::make_tuple(201,221,88),
-            std::make_tuple(252,227,138)
+            std::make_tuple(230, 230, 230), // light green
+            std::make_tuple(160, 160, 160), // light blue
+            std::make_tuple(90,90,90), // light red            
         };
 
-        unsigned colorTableIndex = rand()%colorTable.size();
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dis(0, colorTable.size() - 1);
+        unsigned colorTableIndex = dis(gen);
 
+        std::cout << "colorTableIndex : " << colorTableIndex << std::endl;
+        
         return Tetromino(static_cast<Tetromino::Shape>(tetrominoShapeIndex),
                          Color(std::get<0>(colorTable[colorTableIndex]),
                                std::get<1>(colorTable[colorTableIndex]),
@@ -250,8 +259,8 @@ namespace Tetris
             }
             break;
         case Tetromino::Action::MOVE_LEFT:
-            if(_matrix.isTetrominoMovable(_tetromino,
-                                          Tetromino::Action::MOVE_LEFT,
+            if(_matrix.isTetrominoMovable(_tetromino, 
+                                         Tetromino::Action::MOVE_LEFT,
                                           _tetrominoPosition))
             {
                 _matrix.deleteTetrmino(_tetromino,_tetrominoPosition);

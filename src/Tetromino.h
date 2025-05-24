@@ -81,8 +81,8 @@ namespace Tetris
         const BoundaryDistances& getBoundaryDistances() const;
 
     private:
+        Shape                               _shape;        
         Color                               _color;
-        Shape                               _shape;
         RelativeSquarePositionArray         _relativeSquarePositionArray;
 
         RelativeSquarePositionArray calculateRelativeSquarePositionArray() const;

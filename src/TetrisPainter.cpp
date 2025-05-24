@@ -10,9 +10,7 @@ namespace Tetris
     TetrisPainter::TetrisPainter(SDL_Renderer* renderer_,
                                  unsigned screenWidth_,
                                  unsigned screenHeight_)
-        :MyBase(renderer_),
-         _screenWidth(screenWidth_),
-         _screenHeight(screenHeight_)
+        :MyBase(renderer_)
     {
         if(-1 == TTF_Init()) {
             printf("TTF_Init: %s\n", TTF_GetError());
@@ -40,7 +38,7 @@ namespace Tetris
         Color fillColor(252, 245, 210); //panel fill color
 
         drawRectangle(0, 0,
-                      panelWidth, _screenHeight,
+                      SCREEN_WIDTH, SCREEN_HEIGHT,
                       2, 
                       borderColor, fillColor);
 
@@ -62,19 +60,13 @@ namespace Tetris
     Cordinate TetrisPainter::
     getCordinateFromSquarePosition(unsigned row_, unsigned column_) const
     {
-        double squareSize = 20;
-        double panelWidth = 200;
-
-        return Cordinate((column_-1)*squareSize + panelWidth,(row_-1)*squareSize);
+        return Cordinate((column_-1)*SQUARE_SIZE, (row_-1)*SQUARE_SIZE);
     }
 
     Cordinate TetrisPainter::
     getCordinateFromRelativeSquarePosition(unsigned row_, unsigned column_) const
     {
-        double squareSize = 20;
-        double panelWidth = 200;
-
-        return Cordinate((column_-1)*squareSize,(row_-1)*squareSize);
+        return Cordinate((column_-1)*SQUARE_SIZE,(row_-1)*SQUARE_SIZE);
     }
 
     void TetrisPainter::drawMatrix(const Matrix& matrix_) const
@@ -89,40 +81,45 @@ namespace Tetris
         SDL_RenderPresent(_renderer);       
     }
 
-    void TetrisPainter::drawSquare(const Square& square_,unsigned row_,unsigned column_) const
+    void TetrisPainter::drawSquare(const Square& square_,
+                                   unsigned row_,unsigned column_) const
     {
         Cordinate squareCordinate = getCordinateFromSquarePosition(row_, column_);
 
-        double squareSize = 20;
         Color borderColor(82, 82, 82);
-        Color backgroundColor(255, 250, 235);
         if(square_._isSet)
         {
             drawRectangle(squareCordinate._x, 
                           squareCordinate._y,
-                          squareSize, squareSize,
+                          SQUARE_SIZE, SQUARE_SIZE,
                           1,
-                          borderColor, square_._color);
+                          borderColor,
+                          square_._color);
         }
         else
         {
             drawRectangle(squareCordinate._x, 
                           squareCordinate._y,
-                          squareSize, squareSize,
+                          SQUARE_SIZE, SQUARE_SIZE,
                           0,
-                          borderColor, backgroundColor);
+                          borderColor,
+                          Color(BG_COLOR_RED,
+                                BG_COLOR_GREEN,
+                                BG_COLOR_BLUE));
         }
     }
 
     void TetrisPainter::clearMatrix() const
     {
-        double matrixWidth = 200;
         Color borderColor(82, 82, 82); //matrix border
-        Color fillColor(255, 250, 235); //matrix background color
-        drawRectangle(200, 0,
-                      matrixWidth, _screenHeight,
+        drawRectangle(0, 0,
+                      SCREEN_WIDTH, SCREEN_HEIGHT,
                       2, 
-                      borderColor, fillColor);
+                      borderColor,
+                      Color(BG_COLOR_RED,
+                            BG_COLOR_GREEN,
+                            BG_COLOR_BLUE));
+
     }
 
     void TetrisPainter::
@@ -138,11 +135,10 @@ namespace Tetris
                     relativeSquarePositionArray[i]._row, 
                     relativeSquarePositionArray[i]._column);
 
-            double squareSize = 20;
             Color borderColor(82, 82, 82);
             drawRectangle(cordinate_._x+squareCordinate._x, 
                           cordinate_._y+squareCordinate._y,
-                          squareSize, squareSize,
+                          SQUARE_SIZE, SQUARE_SIZE,
                           1,
                           borderColor, 
                           tetromino_.getColor());
@@ -188,7 +184,11 @@ namespace Tetris
 
     void TetrisPainter::clearScreen() const
     {
-        SDL_SetRenderDrawColor(_renderer, 255, 250, 235, 255); //draw background
+        SDL_SetRenderDrawColor(_renderer,
+                               BG_COLOR_RED,
+                               BG_COLOR_GREEN,
+                               BG_COLOR_BLUE,
+                               255);
         SDL_RenderClear(_renderer);        
     }
 }

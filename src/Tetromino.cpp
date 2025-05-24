@@ -3,9 +3,10 @@
 
 namespace Tetris
 {
-    Tetromino::Tetromino(Shape shape_, const Color& color_)
-        :_color(color_),
-         _shape(shape_),
+    Tetromino::Tetromino(Shape shape_,
+                         const Color& color_)
+        :_shape(shape_),
+         _color(color_),         
          _relativeSquarePositionArray(calculateRelativeSquarePositionArray())
     {}
 

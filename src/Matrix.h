@@ -1,9 +1,6 @@
 #ifndef TETRIS_MATRIX_H
 #define TETRIS_MATRIX_H
 
-#define NO_OF_ROWS 20
-#define NO_OF_COLUMNS 10
-
 #include <array>
 #include "Common.h"
 #include "Tetromino.h"
