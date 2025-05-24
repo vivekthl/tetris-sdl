@@ -1,5 +1,5 @@
 # tetris
-Classic tetris game in C++ using SDL2.0.
+Tetris game in C++ using SDL2.0.
 
 ## Build
 1. Make sure you have cmake and True Type Font (TTF) and SDL2-mixer installed.  
